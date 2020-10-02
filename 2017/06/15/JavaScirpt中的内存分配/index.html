@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="前端开发,JavaScript,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="内存的分类内存主要分为两种：栈内存和堆内存 栈内存栈内存用来控制程序的执行流程就Java来说 程序的入口是main方法 首先将main压入栈内 执行到下一个方法foo时 将foo压入栈中 foo方法调用bar方法时 将bar压入栈中 然后按bar -&amp;gt; foo -&amp;gt; main 的顺序依次把它们弹出 整个程序执行完毕  JavaScript也是这样子的 只不过有一点区别 就是JavaSc">
+<meta name="keywords" content="前端开发,JavaScript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScirpt中的内存分配">
+<meta property="og:url" content="http://yoursite.com/2017/06/15/JavaScirpt中的内存分配/index.html">
+<meta property="og:site_name" content="Chen Haonan&#39;s Notes">
+<meta property="og:description" content="内存的分类内存主要分为两种：栈内存和堆内存 栈内存栈内存用来控制程序的执行流程就Java来说 程序的入口是main方法 首先将main压入栈内 执行到下一个方法foo时 将foo压入栈中 foo方法调用bar方法时 将bar压入栈中 然后按bar -&amp;gt; foo -&amp;gt; main 的顺序依次把它们弹出 整个程序执行完毕  JavaScript也是这样子的 只不过有一点区别 就是JavaSc">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-10-02T04:35:08.852Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JavaScirpt中的内存分配">
+<meta name="twitter:description" content="内存的分类内存主要分为两种：栈内存和堆内存 栈内存栈内存用来控制程序的执行流程就Java来说 程序的入口是main方法 首先将main压入栈内 执行到下一个方法foo时 将foo压入栈中 foo方法调用bar方法时 将bar压入栈中 然后按bar -&amp;gt; foo -&amp;gt; main 的顺序依次把它们弹出 整个程序执行完毕  JavaScript也是这样子的 只不过有一点区别 就是JavaSc">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2017/06/15/JavaScirpt中的内存分配/">
+
+
+
+
+
+  <title>JavaScirpt中的内存分配 | Chen Haonan's Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen Haonan's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/06/15/JavaScirpt中的内存分配/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen Haonan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen Haonan's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">JavaScirpt中的内存分配</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-06-15T19:18:52+08:00">
+                2017-06-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="内存的分类"><a href="#内存的分类" class="headerlink" title="内存的分类"></a>内存的分类</h2><p>内存主要分为两种：栈内存和堆内存</p>
+<h3 id="栈内存"><a href="#栈内存" class="headerlink" title="栈内存"></a>栈内存</h3><p>栈内存用来控制程序的执行流程<br>就Java来说 程序的入口是main方法 首先将main压入栈内 执行到下一个方法foo时 将foo压入栈中 foo方法调用bar方法时 将bar压入栈中 然后按bar -&gt; foo -&gt; main 的顺序依次把它们弹出 整个程序执行完毕 </p>
+<p>JavaScript也是这样子的 只不过有一点区别 就是JavaScript不需要显示的指定main方法 所有的JavaScript代码默认都是在隐式的main方法里 这可能会让大家不习惯 这种从上到下像面条一样的代码</p>
+<p>语言本身给我们带来的特性是没有好坏的 特性本身是用来解决问题的 如何去使用这些特性就要靠我们自己去选择了<br>我在写JavaScript会创建一个<strong>main</strong> 方法来作为我的主函数 整个在代码的流程都在这里执行 这样整个逻辑就非常清晰了</p>
+<p>栈内存还可以存基本的数据类型和引用类型的地址 当程序需要操作基本类型的时候就直接把栈中的东西拿出来就可以了 操作引用类型时先把地址拿回来 然后根据这个地址去堆内存中找到对应的对象 </p>
+<p>这些变量是存在作用域的 它们随着函数push stack 被创建 并且在 pop stack的时候被销毁</p>
+<h3 id="堆内存"><a href="#堆内存" class="headerlink" title="堆内存"></a>堆内存</h3><p>堆内存用来存引用类型 不像栈内存 堆内存就像一个院子 没有顺序 </p>
+<h4 id="栈内存是静态的-而堆内存是动态的"><a href="#栈内存是静态的-而堆内存是动态的" class="headerlink" title="栈内存是静态的 而堆内存是动态的"></a>栈内存是静态的 而堆内存是动态的</h4><h2 id="内存的生命周期"><a href="#内存的生命周期" class="headerlink" title="内存的生命周期"></a>内存的生命周期</h2><ol>
+<li>分配</li>
+<li>使用</li>
+<li>释放</li>
+</ol>
+<p>在c语言中提供了对内存进行管理的接口<br>而在JavaScript中不需要程序员直接操作内存 因为JavaScript提供了内置的垃圾回收机制 当内存不需要的时候就会自动的回收</p>
+<p>如何判断那些内存可以被回收 </p>
+<ol>
+<li>引用计数<br>这是最简单的垃圾收集算法。对象如果没有其他对象引用到它。对象将被垃圾回收机制回收。<br>该算法有个限制：无法处理循环引用<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> div;</span><br><span class="line"><span class="built_in">window</span>.onload = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">  div = <span class="built_in">document</span>.getElementById(<span class="string">"myDivElement"</span>);</span><br><span class="line">  div.circularReference = div;</span><br><span class="line">  div.lotsOfData = <span class="keyword">new</span> <span class="built_in">Array</span>(<span class="number">10000</span>).join(<span class="string">"*"</span>);</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>myDivElement 一直存在一个自身的引用 即使他在DOM树中移除了 该内存也不会被释放</p>
+<ol start="2">
+<li>标记清除</li>
+</ol>
+<p>假定设置一个叫做根（root）的对象（在Javascript里，根是全局对象）。定期的，垃圾回收器将从根开始，找所有从根开始引用的对象，然后找这些对象引用的对象……从根开始，垃圾回收器将找到所有可以获得的对象和所有不能获得的对象 这个算法解决了循环引用的问题。</p>
+<p>具体的触发垃圾回收的情况又很复杂这里就不再继续研究了。<br>以上就是我对内存的理解。</p>
+<p>参考<br> <a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Memory_Management" target="_blank" rel="noopener">MDN 内存管理</a></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/前端开发/" rel="tag"># 前端开发</a>
+          
+            <a href="/tags/JavaScript/" rel="tag"># JavaScript</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/07/08/JavaScript中对象的创建方式/" rel="prev" title="JavaScript中对象的创建方式">
+                JavaScript中对象的创建方式 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chen Haonan</p>
+              <p class="site-description motion-element" itemprop="description">write something</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#内存的分类"><span class="nav-number">1.</span> <span class="nav-text">内存的分类</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#栈内存"><span class="nav-number">1.1.</span> <span class="nav-text">栈内存</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#堆内存"><span class="nav-number">1.2.</span> <span class="nav-text">堆内存</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#栈内存是静态的-而堆内存是动态的"><span class="nav-number">1.2.1.</span> <span class="nav-text">栈内存是静态的 而堆内存是动态的</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存的生命周期"><span class="nav-number">2.</span> <span class="nav-text">内存的生命周期</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Haonan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

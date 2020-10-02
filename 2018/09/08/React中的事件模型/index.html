@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="React,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="与浏览器原生的事件不同React中的事件属于合成事件，是由React提供的，首先我们看一下浏览器原生的事件模型 DOM事件模型DOM事件分为三个阶段  事件捕获 事件目标处理函数 事件冒泡  当事件触发的时候，首先由document发出一个事件流，通过DOM树一层层到达目标DOM这个阶段属于事件捕获，到达触发事件DOM这个阶段是执行处理函数，接下来从目标DOM返回到document这个阶段称为事件">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="React中的事件模型">
+<meta property="og:url" content="http://yoursite.com/2018/09/08/React中的事件模型/index.html">
+<meta property="og:site_name" content="Chen Haonan&#39;s Notes">
+<meta property="og:description" content="与浏览器原生的事件不同React中的事件属于合成事件，是由React提供的，首先我们看一下浏览器原生的事件模型 DOM事件模型DOM事件分为三个阶段  事件捕获 事件目标处理函数 事件冒泡  当事件触发的时候，首先由document发出一个事件流，通过DOM树一层层到达目标DOM这个阶段属于事件捕获，到达触发事件DOM这个阶段是执行处理函数，接下来从目标DOM返回到document这个阶段称为事件">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-10-02T04:35:08.853Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="React中的事件模型">
+<meta name="twitter:description" content="与浏览器原生的事件不同React中的事件属于合成事件，是由React提供的，首先我们看一下浏览器原生的事件模型 DOM事件模型DOM事件分为三个阶段  事件捕获 事件目标处理函数 事件冒泡  当事件触发的时候，首先由document发出一个事件流，通过DOM树一层层到达目标DOM这个阶段属于事件捕获，到达触发事件DOM这个阶段是执行处理函数，接下来从目标DOM返回到document这个阶段称为事件">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/09/08/React中的事件模型/">
+
+
+
+
+
+  <title>React中的事件模型 | Chen Haonan's Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen Haonan's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/08/React中的事件模型/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen Haonan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen Haonan's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">React中的事件模型</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-08T10:18:15+08:00">
+                2018-09-08
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>与浏览器原生的事件不同React中的事件属于合成事件，是由React提供的，首先我们看一下浏览器原生的事件模型</p>
+<h3 id="DOM事件模型"><a href="#DOM事件模型" class="headerlink" title="DOM事件模型"></a>DOM事件模型</h3><p>DOM事件分为三个阶段</p>
+<ol>
+<li>事件捕获</li>
+<li>事件目标处理函数</li>
+<li>事件冒泡</li>
+</ol>
+<p>当事件触发的时候，首先由document发出一个事件流，通过DOM树一层层到达目标DOM这个阶段属于事件捕获，到达触发事件DOM这个阶段是执行处理函数，接下来从目标DOM返回到document这个阶段称为事件冒泡阶段。</p>
+<p>一般情况下我们的事件处理函数在事件冒泡阶段执行，addEventListener API的第三的参数接收一个boolean值 允许我们制定事件是否在捕获阶段执行，默认是false。</p>
+<p>我们可以调用 event.stopPorpagation()来组织事件冒泡 IE下使用 event.cancel = true</p>
+<p>使用事件对于浏览器来说是一个相对来说比较消耗性能的操作，而且当绑定事件的DOM从页面中移除的时候我们需要手动接触事件监听以防止出现内存泄漏的问题。</p>
+<p>当一个列表中的每一个item都需要绑定事件的时候，如果每一个item都绑定事件就不是一个好的方法，一来我们需要对多个事件监听进行绑定和移除，二来多个事件监听浪费了更多的内存影响浏览器性能。</p>
+<p>解决方法就是使用事件委托思想，利用事件冒泡机制，在所有item的外层添加一个事件处理函数，然后根据event对象的target属性来判断真实触发事件的DOM，这样就只需要一个事件处理函数，降低了维护成本，也提高了页面的性能。</p>
+<p>事件委托也存在局限的地方因为是依赖事件冒泡原理实现的，但是有些事件是不支持事件冒泡的，那么这些事件也就无法使用代理机制。</p>
+<hr>
+<h3 id="React中的合成事件"><a href="#React中的合成事件" class="headerlink" title="React中的合成事件"></a>React中的合成事件</h3><p>React将所有类型的事件绑定到document上，使用全局统一的事件监听器，这个事件监听器维护了所有React事件和处理函数的映射关系，当组件绑定事件时，就会在这个映射关系上插入一个对象，当组件卸载时，在这个映射关系上删除一个对象，这样就不会频繁的绑定和卸载事件监听，只需要维护这个映射关系就可以了。</p>
+<p>当触发事件时，我们知道事件的类型和触发事件的React component，我们找到这个React component，如果事件是支持冒泡的，那我们还需要findParent找到它的父节点，这个过程一直重复到parent是document，然后事件就沿着这个路线一直到document，当然我们也可以使用event.stopPropagation()阻止事件冒泡，因为event对象经过封装所以stopPropagation方法在IE下也可以使用没有兼容性问题。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/React/" rel="tag"># React</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/06/06/react出现的意义及设计理念/" rel="next" title="React出现的意义及设计理念">
+                <i class="fa fa-chevron-left"></i> React出现的意义及设计理念
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/11/06/合理使用react的生命周期/" rel="prev" title="合理使用React的生命周期">
+                合理使用React的生命周期 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chen Haonan</p>
+              <p class="site-description motion-element" itemprop="description">write something</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#DOM事件模型"><span class="nav-number">1.</span> <span class="nav-text">DOM事件模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#React中的合成事件"><span class="nav-number">2.</span> <span class="nav-text">React中的合成事件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Haonan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="性能优化,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="为什么我们需要节流和防抖？JavaScript遵循事件驱动的编程模型，用户的某些特定的行为会触发响应的回调函数，行为发生的频率是由用户控制的，频繁的触发回调函数可能会产生性能问题，这个时候我们可以从控制如何响应回调函数入手去优化性能。考虑如下真实的场景：一个图片墙功能，需要我们延迟加载图片，这就需要我们去监听页面滚动事件，在回调函数中我们判断未加载的图片当前是否展示在了浏览器可视区域，如果展示了，">
+<meta name="keywords" content="性能优化">
+<meta property="og:type" content="article">
+<meta property="og:title" content="节流和防抖">
+<meta property="og:url" content="http://yoursite.com/2018/05/14/节流和防抖/index.html">
+<meta property="og:site_name" content="Chen Haonan&#39;s Notes">
+<meta property="og:description" content="为什么我们需要节流和防抖？JavaScript遵循事件驱动的编程模型，用户的某些特定的行为会触发响应的回调函数，行为发生的频率是由用户控制的，频繁的触发回调函数可能会产生性能问题，这个时候我们可以从控制如何响应回调函数入手去优化性能。考虑如下真实的场景：一个图片墙功能，需要我们延迟加载图片，这就需要我们去监听页面滚动事件，在回调函数中我们判断未加载的图片当前是否展示在了浏览器可视区域，如果展示了，">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-10-02T04:35:08.854Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="节流和防抖">
+<meta name="twitter:description" content="为什么我们需要节流和防抖？JavaScript遵循事件驱动的编程模型，用户的某些特定的行为会触发响应的回调函数，行为发生的频率是由用户控制的，频繁的触发回调函数可能会产生性能问题，这个时候我们可以从控制如何响应回调函数入手去优化性能。考虑如下真实的场景：一个图片墙功能，需要我们延迟加载图片，这就需要我们去监听页面滚动事件，在回调函数中我们判断未加载的图片当前是否展示在了浏览器可视区域，如果展示了，">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/05/14/节流和防抖/">
+
+
+
+
+
+  <title>节流和防抖 | Chen Haonan's Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen Haonan's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/05/14/节流和防抖/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen Haonan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen Haonan's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">节流和防抖</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-05-14T11:39:00+08:00">
+                2018-05-14
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="为什么我们需要节流和防抖？"><a href="#为什么我们需要节流和防抖？" class="headerlink" title="为什么我们需要节流和防抖？"></a>为什么我们需要节流和防抖？</h2><p>JavaScript遵循事件驱动的编程模型，用户的某些特定的行为会触发响应的回调函数，行为发生的频率是由用户控制的，频繁的触发回调函数可能会产生性能问题，这个时候我们可以从控制如何响应回调函数入手去优化性能。<br>考虑如下真实的场景：<br>一个图片墙功能，需要我们延迟加载图片，这就需要我们去监听页面滚动事件，在回调函数中我们判断未加载的图片当前是否展示在了浏览器可视区域，如果展示了，就去加载页面的真实地址。如果不对响应函数进行处理的话，scroll事件会频繁的计算图片的位置和当前滚动的位置，产生页面卡顿的现象。<br>一个input搜索功能，当用户从键盘输入内容的时候，向后端接口请求所有匹配的内容，类似于百度搜索栏一样的功能，如果我们不对响应函数加以控制，会出现什么现象呢？我们每输入一个字符，就都会向后端发出一次请求，但其实我们一次完整的输入过程并没有完成，这些中间状态是不必要的，请求接口也造成了资源的浪费。<br>处理以上情况通常的做法是使用节流和防抖。</p>
+<h2 id="节流"><a href="#节流" class="headerlink" title="节流"></a>节流</h2><p>拿自来水管中的水流为例，节流的意思是降低水流的大小，用在这个地方是降低了响应响应时间的频率，限制了两次响应的时间间隔。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> start = <span class="built_in">Date</span>.now()</span><br><span class="line"><span class="keyword">var</span> timeId = <span class="literal">null</span>;</span><br><span class="line"><span class="keyword">var</span> dur = <span class="number">1000</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'log'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'emit'</span>)</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">var</span> now = <span class="built_in">Date</span>.now()</span><br><span class="line">		clearTimeout(timeId)</span><br><span class="line">		<span class="keyword">if</span> (now - start &gt;= dur) &#123;</span><br><span class="line">			log()</span><br><span class="line">			start = now</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			timeId = setTimeout(log, dur)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.onscroll = throttle()</span><br></pre></td></tr></table></figure>
+<p>这样的话我们就实现了节流的效果 这里我们每隔一秒钟响应一次 如果两次触发回调的时间间隔小于一秒我们就可以设置一个一秒钟的定时器这样就可以保证不会错误的丢掉响应 具体的时间间隔可以适当进行调整 这里只是做一个演示。</p>
+<p>上面的代码实现了我们想要的功能但是从可用性角度来看是无法接受的，throttle函数依赖了全局的start和timeId变量并且与响应函数也存在强耦合的关系，下面我们稍微修改一下</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">throttle</span>(<span class="params">fn, dur</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> start = <span class="built_in">Date</span>.now()</span><br><span class="line">	<span class="keyword">var</span> timeId = <span class="literal">null</span>;</span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">var</span> now = <span class="built_in">Date</span>.now()</span><br><span class="line">		clearTimeout(timeId)</span><br><span class="line">		<span class="keyword">if</span> (now - start &gt;= dur) &#123;</span><br><span class="line">			fn()</span><br><span class="line">			start = now</span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			timeId = setTimeout(fn, dur)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'log'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.onscroll = throttle(log, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure>
+<h2 id="防抖"><a href="#防抖" class="headerlink" title="防抖"></a>防抖</h2><p>防抖这个术语在电学中是将多个电信号合并成一个电信号<br>在这里我们接收到一个响应信号时不是立即执行处理函数而是等待一定时间，如果这段时间内没有接收到信号则执行处理函数，如果再次接收到了那么重置开始时间重新等待，这样就可以做到在一定时间间隔内将多个信号合并<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'log'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">debounce</span>(<span class="params">fn, dur</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> timeId = <span class="literal">null</span></span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		clearTimeout(timeId)</span><br><span class="line">		timeId = setTimeout(fn, dur)</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.onscroll = debounce(log, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure></p>
+<p>有些时候我们需要先执行一次处理函数然后再进行等待<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">log</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="string">'log'</span>)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">immediate</span>(<span class="params">fn, dur</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> timeId = <span class="literal">null</span></span><br><span class="line">	<span class="keyword">var</span> timeout = <span class="literal">true</span></span><br><span class="line">	<span class="keyword">return</span> <span class="function"><span class="keyword">function</span>(<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="keyword">if</span>(timeout) &#123;</span><br><span class="line">			fn()</span><br><span class="line">			timeout = <span class="literal">false</span></span><br><span class="line">		&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">			clearTimeout(timeId)</span><br><span class="line">			timeId = setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">				fn()</span><br><span class="line">				timeout = <span class="literal">true</span></span><br><span class="line">			&#125;, dur)</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">window</span>.onscroll = immediate(log, <span class="number">1000</span>)</span><br></pre></td></tr></table></figure></p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>节流和防抖的概念在性能优化中是处理浏览器回调函数的常见手段，对提升我们页面性能和用户体验来说非常重要，还可以减少中间状态时不必要的请求，是非常重要的概念。</p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/性能优化/" rel="tag"># 性能优化</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/03/01/浏览器安全/xss和csrf/" rel="next" title="xss和csrf">
+                <i class="fa fa-chevron-left"></i> xss和csrf
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/06/06/react出现的意义及设计理念/" rel="prev" title="React出现的意义及设计理念">
+                React出现的意义及设计理念 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chen Haonan</p>
+              <p class="site-description motion-element" itemprop="description">write something</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#为什么我们需要节流和防抖？"><span class="nav-number">1.</span> <span class="nav-text">为什么我们需要节流和防抖？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#节流"><span class="nav-number">2.</span> <span class="nav-text">节流</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#防抖"><span class="nav-number">3.</span> <span class="nav-text">防抖</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-number">4.</span> <span class="nav-text">总结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Haonan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

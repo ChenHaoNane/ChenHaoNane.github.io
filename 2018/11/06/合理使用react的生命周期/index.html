@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next muse use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="React,">
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="大家在写React代码的时候也就是在React的生命周期函数中编写代码，有的时候我们在两个生命周期中编写代码可能得到的是相同的结果，但是对于生命周期的使用是有最佳实践的。 特别是在React v16.3之后引入了异步渲染的概念，这个时候我们如何使用生命周期就变得更加重要了，首先我们先来看看v16.3之前的生命周期 React v16.3以前的生命周期 创建阶段12345// 构造函数constru">
+<meta name="keywords" content="React">
+<meta property="og:type" content="article">
+<meta property="og:title" content="合理使用React的生命周期">
+<meta property="og:url" content="http://yoursite.com/2018/11/06/合理使用react的生命周期/index.html">
+<meta property="og:site_name" content="Chen Haonan&#39;s Notes">
+<meta property="og:description" content="大家在写React代码的时候也就是在React的生命周期函数中编写代码，有的时候我们在两个生命周期中编写代码可能得到的是相同的结果，但是对于生命周期的使用是有最佳实践的。 特别是在React v16.3之后引入了异步渲染的概念，这个时候我们如何使用生命周期就变得更加重要了，首先我们先来看看v16.3之前的生命周期 React v16.3以前的生命周期 创建阶段12345// 构造函数constru">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fwyq3wa6h8j30fq09zgm6.jpg">
+<meta property="og:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fwyqkzfryjj30va0hqtb5.jpg">
+<meta property="og:updated_time" content="2020-10-02T04:35:08.853Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="合理使用React的生命周期">
+<meta name="twitter:description" content="大家在写React代码的时候也就是在React的生命周期函数中编写代码，有的时候我们在两个生命周期中编写代码可能得到的是相同的结果，但是对于生命周期的使用是有最佳实践的。 特别是在React v16.3之后引入了异步渲染的概念，这个时候我们如何使用生命周期就变得更加重要了，首先我们先来看看v16.3之前的生命周期 React v16.3以前的生命周期 创建阶段12345// 构造函数constru">
+<meta name="twitter:image" content="https://ws3.sinaimg.cn/large/006tNbRwly1fwyq3wa6h8j30fq09zgm6.jpg">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Muse',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/11/06/合理使用react的生命周期/">
+
+
+
+
+
+  <title>合理使用React的生命周期 | Chen Haonan's Notes</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">Chen Haonan's Notes</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle"></p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/06/合理使用react的生命周期/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen Haonan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen Haonan's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">合理使用React的生命周期</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-06T17:41:50+08:00">
+                2018-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <p>大家在写React代码的时候也就是在React的生命周期函数中编写代码，有的时候我们在两个生命周期中编写代码可能得到的是相同的结果，但是对于生命周期的使用是有最佳实践的。</p>
+<p>特别是在React v16.3之后引入了异步渲染的概念，这个时候我们如何使用生命周期就变得更加重要了，首先我们先来看看v16.3之前的生命周期</p>
+<h2 id="React-v16-3以前的生命周期"><a href="#React-v16-3以前的生命周期" class="headerlink" title="React v16.3以前的生命周期"></a>React v16.3以前的生命周期</h2><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fwyq3wa6h8j30fq09zgm6.jpg" alt="react hocks beforev16.3"></p>
+<h3 id="创建阶段"><a href="#创建阶段" class="headerlink" title="创建阶段"></a>创建阶段</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 构造函数</span></span><br><span class="line"><span class="keyword">constructor</span>(props) &#123;</span><br><span class="line">	<span class="keyword">super</span>(props)</span><br><span class="line">	<span class="keyword">this</span>.state = &#123; <span class="attr">counter</span>: <span class="number">0</span> &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>构造函数阶段，只调用一次，接收到传入的props，需要手动调用super(props)</p>
+<p>在这个阶段我们对组件的state数据进行初始化</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">render() &#123;</span><br><span class="line">	<span class="keyword">return</span> (</span><br><span class="line">		...</span><br><span class="line">	)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>render阶段 这个阶段我们渲染UI<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">componentDidMount() &#123;</span><br><span class="line">	<span class="keyword">const</span> container = <span class="keyword">this</span>.DomContainer</span><br><span class="line">	<span class="keyword">const</span> containerHeight = container.clientHeight</span><br><span class="line">	<span class="keyword">this</span>.setState(&#123;</span><br><span class="line">		containerHeight</span><br><span class="line">	&#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>UI渲染完毕的阶段，只调用一次，在这个生命周期开始DOM才被创建，一些jquery库需要在这里初始化，如果需要计算DOM的高度来初始化，那么也应该在这里进行初始化</p>
+<h3 id="更新阶段"><a href="#更新阶段" class="headerlink" title="更新阶段"></a>更新阶段</h3><p>更新分为两种：一种是父组件传入的props变化，或者组件调用setState()</p>
+<p>当props发生变化时进入<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">componentWillReceiveProps(nextProps) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>在这里我们可以更新组件的state，但是最好是根据组件的props计算后去渲染UI，因为这样可以保证单一数据源又避免维护一份数据产生额外的开销</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">shouldComponentUpdate(nextProps, nextState) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>返回一个boolean值，表示是否应该更新，默认返回true，返回false时不再执行下面的生命周期</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">componentWillUpdate(nextProps, nextState) &#123;</span><br><span class="line">&#125;</span><br><span class="line">render() &#123;</span><br><span class="line">	<span class="keyword">return</span> (</span><br><span class="line">		...</span><br><span class="line">	)</span><br><span class="line">&#125;</span><br><span class="line">componentDidUpdate() &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>render声明周期前后分别是componentWillUpdate和componentDIdUpdate</p>
+<p>更新的第二种是组件调用forceUpdate，这时候会直接进入componentWillUpdate</p>
+<h3 id="卸载阶段"><a href="#卸载阶段" class="headerlink" title="卸载阶段"></a>卸载阶段</h3><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">componentWillUnmount() &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>组件在页面卸载之前进入componentWillUnmount生命周期，在这里我们可以对需要清理的资源资源进行释放，比如：清除计时器</p>
+<h2 id="Reactv16-3开始的生命周期"><a href="#Reactv16-3开始的生命周期" class="headerlink" title="Reactv16.3开始的生命周期"></a>Reactv16.3开始的生命周期</h2><p><img src="https://ws3.sinaimg.cn/large/006tNbRwly1fwyqkzfryjj30va0hqtb5.jpg" alt="react hocks afterv16.3"></p>
+<ul>
+<li>componentWillMount</li>
+<li>componentWillReceiveProps</li>
+<li>componentWillUpdate</li>
+</ul>
+<p>这些生命周期方法经常被错误的使用，当开启异步渲染的时候可能存在安全隐患</p>
+<p>所以16.3版本开始 这些生命周期将增加UNSAFE_开头的别名 </p>
+<p>17.0版本开始将删除这些生命周期 只有UNSAFE_开头的生命周期可以使用</p>
+<p>新增俩个生命周期getDerivedStateFromProps和getSnapshotBeforeUpdate </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">getDerivedStateFromProps(nextProps, prevState) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个生命周期替换了componentWillReceiveProps的所有情况，接收到nextProps和prevState，返回一个state对象merge到原来的state</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">getSnapshotBeforeUpdate(prevProps, prevState) &#123;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这个生命周期替换了componentWillUpdate，返回的对象将作为第三个参数传给componentDidUpdate</p>
+<p>除了这俩个生命周期的变化，还提出了三个阶段的概念，render阶段，pre-commit阶段和commit阶段，由于要支持异步渲染，所以组件的生命周期可能由于优先级更高的事件触发而终止，<br>在render阶段我们可以终止组件继续渲染。<br>在pre-commit阶段我们可以对dom的数据进行读取。<br>在commit阶段我们可以使用dom，执行副作用操作。</p>
+<ol>
+<li>添加事件监听<br>componentWillMount 和 componentWillUnmount 不是一对生命周期<br>只有调用了componentDidMount 才一定会调用 componentWillUnmount<br>所以如果在componentWillMount中做了一些比如注册监听的工作<br>由于component 在没有完成componentDidMount的时候可能会被打断<br>所以也不会执行 componentWillUnmount 中的清理工作 It can leak<br>所以我们应该把注册监听的操作放到componentDidMount中执行<br>这样就保证我们在componentWillUnmount中的清理工作一定会被执行 </li>
+<li><p>获取外部数据<br>在componentWillMount中大家可能会去获取外部数据<br>使得数据会再componentDIdMount的时候正确的渲染<br>但实际上这是做不到的<br>在执行完componentWillMount之后会立刻执行componentDidMount<br>这是一个同步执行的过程 而从接口获取数据是一个异步的过程<br>所以提前到componentWillMount中执行是没有意义的 </p>
+</li>
+<li><p>初始化数据<br>componentWillMount 中初始化数据的操作应该迁移到constructor中 </p>
+</li>
+<li><p>componentWIllUpdate 和 componentDidUpdate<br>当组件更新时需要产生副作用 使用componentDidUpdate 而不是componentWillUpdate<br>在异步模式下 多次willUpdate可能只会触发一次真正的更新所以在willUpdate中产生副作用可能达不到你想要的预期 </p>
+</li>
+<li><p>getSnapshotBeforeUpdate(prevProps, prevState)<br>使用componentWillUpdate读取dom属性对于异步渲染来说<br>componentWillUpdate 和 render 属于 render 生命周期<br>与 componentDidUpdate 之间存在延迟<br>如果在这个时间内用户改变了dom 存储的数据将会失效<br>解决的方法就是使用getSnapshotBeforeUpdate方法 </p>
+</li>
+</ol>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/React/" rel="tag"># React</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/09/08/React中的事件模型/" rel="next" title="React中的事件模型">
+                <i class="fa fa-chevron-left"></i> React中的事件模型
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2020/04/13/OOP面向对象编程/" rel="prev" title="OOP面向对象编程">
+                OOP面向对象编程 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">Chen Haonan</p>
+              <p class="site-description motion-element" itemprop="description">write something</p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">5</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#React-v16-3以前的生命周期"><span class="nav-number">1.</span> <span class="nav-text">React v16.3以前的生命周期</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#创建阶段"><span class="nav-number">1.1.</span> <span class="nav-text">创建阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更新阶段"><span class="nav-number">1.2.</span> <span class="nav-text">更新阶段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#卸载阶段"><span class="nav-number">1.3.</span> <span class="nav-text">卸载阶段</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Reactv16-3开始的生命周期"><span class="nav-number">2.</span> <span class="nav-text">Reactv16.3开始的生命周期</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Chen Haonan</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Muse</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
