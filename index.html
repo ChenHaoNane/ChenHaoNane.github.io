@@ -966,7 +966,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/01/浏览器安全/xss和csrf/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/01/浏览器安全/xss/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chen Haonan">
@@ -985,7 +985,127 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/03/01/浏览器安全/xss和csrf/" itemprop="url">xss和csrf</a></h1>
+                <a class="post-title-link" href="/2018/03/01/浏览器安全/xss/" itemprop="url">xss</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-03-01T22:12:14+08:00">
+                2018-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h2 id="xss攻击"><a href="#xss攻击" class="headerlink" title="xss攻击"></a>xss攻击</h2><p>XSS攻击全称跨站脚本攻击，是为不和层叠样式表(Cascading Style Sheets, CSS)的缩写混淆，故将跨站脚本攻击缩写为XSS，XSS是一种在web应用中的计算机安全漏洞，它允许恶意web用户将代码植入到提供给其它用户使用的页面中。</p>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/03/01/浏览器安全/csrf/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Chen Haonan">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="Chen Haonan's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/03/01/浏览器安全/csrf/" itemprop="url">xss和csrf</a></h1>
         
 
         <div class="post-meta">
@@ -1410,7 +1530,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/06/浏览器安全/跨域问题/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/08/06/浏览器安全/同源策略及跨域资源共享/">
 
     <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
       <meta itemprop="name" content="Chen Haonan">
@@ -1429,7 +1549,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2017/08/06/浏览器安全/跨域问题/" itemprop="url">跨域问题</a></h1>
+                <a class="post-title-link" href="/2017/08/06/浏览器安全/同源策略及跨域资源共享/" itemprop="url">同源策略及跨域资源共享</a></h1>
         
 
         <div class="post-meta">
@@ -1494,8 +1614,35 @@
 <p>JSON是自从AJAX2.0以来使用最广泛的数据传输格式 [] 表示 数组 {} 表示 对象<br>JSONP是一种数据的传输方式<br>所以说关系好像 JAVA 和 JavaScript(就是没啥关系)</p>
 <p>那我们如何使用JSONP请求数据呢?</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个script</span></span><br><span class="line"><span class="keyword">var</span> script = <span class="built_in">document</span>.createElement(<span class="string">'script'</span>)</span><br><span class="line"><span class="built_in">document</span>.body.appendChild(script)</span><br><span class="line"><span class="comment">// 前端接到数据后的处理函数</span></span><br><span class="line"><span class="built_in">window</span>.xxx = <span class="function"><span class="keyword">function</span> (<span class="params">value</span>) </span>&#123;</span><br><span class="line">  <span class="built_in">console</span>.log(value)</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// src设置为要请求的url在参数上传出给后端的参数 这个参数是你和后端规定好的可以是任意</span></span><br><span class="line">script.src = <span class="string">'http://x.stuq.com:7001/json?callback=xxx'</span></span><br><span class="line"><span class="comment">//在后端接到这个callback的值也就是你要执行处理数据的方法名</span></span><br><span class="line">...</span><br><span class="line"><span class="comment">// 然后返回给前端</span></span><br><span class="line">...</span><br><span class="line"><span class="comment">//</span></span><br></pre></td></tr></table></figure>
-<h3 id="2-CROS"><a href="#2-CROS" class="headerlink" title="2.CROS"></a>2.CROS</h3><p>设置Access-Control-Allow-Origin</p>
-<p>第一种.将你需要跨域的站点设置上’Access-Control-Allow-Origin’, ‘<a href="http://xx.stuq.com&#39;" target="_blank" rel="noopener">http://xx.stuq.com&#39;</a><br>第二种.对所有站点的请求都不拦截’Access-Control-Allow-Origin’, ‘*’<br>这样设置之后就不用做任何事情了<br>参数还可以根据请求的站点动态设置，这样就保证了灵活性</p>
+<h3 id="2-CORS"><a href="#2-CORS" class="headerlink" title="2.CORS"></a>2.CORS</h3><p>CORS 全称为跨域资源共享（cross-origin sharing standard）规定了在跨源资源访问时的规则<br>在跨源请求访问时会带上 Header 信息来让 server 端判断时候允许访问资源。</p>
+<h4 id="简单请求"><a href="#简单请求" class="headerlink" title="简单请求"></a>简单请求</h4><p>同时满足下列所有条件的时候称为简单请求</p>
+<ul>
+<li>请求方法为 GET POST HEAD</li>
+<li>Request header 在如下的列表中<ul>
+<li>Content-Type</li>
+<li>Content-Language</li>
+<li>Accept-Language</li>
+<li>Accept</li>
+<li>DPR</li>
+<li>Downlink</li>
+<li>Width</li>
+<li>Viewport-Width</li>
+<li>Save-Data</li>
+</ul>
+</li>
+<li>Content-Type 为下面三种类型之一<ul>
+<li>multipart/form-data</li>
+<li>text/plain</li>
+<li>application/x-www-form-urlencode</li>
+</ul>
+</li>
+<li>请求中的任意XMLHttpRequestUpload 对象均没有注册任何事件监听器；<br>XMLHttpRequestUpload 对象可以使用 XMLHttpRequest.upload 属性访问。</li>
+<li>请求中没有使用 ReadableStream 对象。</li>
+</ul>
+<h4 id="需要预检的请求"><a href="#需要预检的请求" class="headerlink" title="需要预检的请求"></a>需要预检的请求</h4><p>除简单请求外，请求都是需要预检的，在发出正常请求之前需要先发出一个 OPTIONS 请求，这个请求只携带少量的信息，来询问服务端是否允许实际请求。</p>
+<p>Access-Control-Request-Methods<br>Access-Control-Request-Headers</p>
+<p>Access-Control-Allow-Origin<br>Access-Control-Allow-Methods<br>Access-Control-Allow-Headers<br>Access-Control-Max-Age<br>Access-Control-Allow-Credentials</p>
+<p>设置Access-Control-Allow-Origin<br>第一种.将你需要跨域的站点设置上’Access-Control-Allow-Origin’, ‘<a href="http://xx.stuq.com&#39;" target="_blank" rel="noopener">http://xx.stuq.com&#39;</a><br>第二种.对所有站点的请求都不拦截’Access-Control-Allow-Origin’, ‘*’<br>这样设置之后就不用做任何事情了<br>参数还可以根据请求的站点动态设置，这样就保证了灵活性</p>
 <h3 id="3-location-hash"><a href="#3-location-hash" class="headerlink" title="3.location.hash"></a>3.location.hash</h3><p>使用iframe 在iframe中加载一个与邀请同域的页面 在这个页面中发起请求</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 创建一个iframe</span></span><br><span class="line"><span class="keyword">var</span> iframe = <span class="built_in">document</span>.createElement(<span class="string">'iframe'</span>)</span><br><span class="line"><span class="comment">//加载一个同域的页面 我们在这个页面发ajax</span></span><br><span class="line">iframe.src = <span class="string">'http://x.stuq.com:7001/public/hash.html'</span></span><br><span class="line"><span class="built_in">document</span>.body.appendChild(iframe)</span><br><span class="line"><span class="comment">// 进入hash.html这个页面</span></span><br><span class="line"><span class="keyword">var</span> xhr = <span class="keyword">new</span> XMLHttpRequest()</span><br><span class="line">xhr.onreadystatechange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (xhr.readyState === <span class="number">4</span> &amp;&amp; xhr.status === <span class="number">200</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> res = <span class="built_in">JSON</span>.parse(xhr.responseText)</span><br><span class="line">        parent.location.href = <span class="string">`http://y.stuq.com:7001/public/3.html#msg=<span class="subst">$&#123;res.msg&#125;</span>`</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line">xhr.open(<span class="string">'GET'</span>, <span class="string">'http://x.stuq.com:7001/json'</span>, <span class="literal">true</span>)</span><br><span class="line">xhr.send(<span class="literal">null</span>)</span><br><span class="line"><span class="comment">// 监听hash改变事件 取得信息</span></span><br><span class="line"><span class="built_in">window</span>.onhashchange = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">  <span class="keyword">let</span> hash = location.hash</span><br><span class="line">  <span class="keyword">let</span> reg = <span class="regexp">/[#&amp;][^#&amp;]+=[^#&amp;]+/g</span></span><br><span class="line">  <span class="keyword">let</span> arr = hash.match(reg)</span><br><span class="line">  <span class="keyword">let</span> obj = &#123;&#125;</span><br><span class="line">  arr.forEach(<span class="function"><span class="params">item</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> tempArr = item.substring(<span class="number">1</span>).split(<span class="string">'='</span>)</span><br><span class="line">    <span class="keyword">let</span> key = <span class="built_in">decodeURIComponent</span>(tempArr[<span class="number">0</span>])</span><br><span class="line">    <span class="keyword">let</span> val = <span class="built_in">decodeURIComponent</span>(tempArr[<span class="number">1</span>])</span><br><span class="line">    obj[key] = val</span><br><span class="line">  &#125;)</span><br><span class="line">  <span class="built_in">console</span>.log(obj)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="4-Window-name"><a href="#4-Window-name" class="headerlink" title="4.Window.name"></a>4.Window.name</h3><p>开始也是与上面一样<br>不同的地方在于在iframe中请求到数据后如何带回来</p>
@@ -1509,135 +1656,6 @@
 <li>后端无法控制 允许上传一个页面 window.name location.hash postMessage(前提是现代浏览器…)</li>
 </ul>
 
-          
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope="" itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2017/07/13/JavaScript中的继承/">
-
-    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="Chen Haonan">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="Chen Haonan's Notes">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2017/07/13/JavaScript中的继承/" itemprop="url">JavaScript中的继承</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-07-13T15:23:53+08:00">
-                2017-07-13
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <h2 id="JavaScript中的继承"><a href="#JavaScript中的继承" class="headerlink" title="JavaScript中的继承"></a>JavaScript中的继承</h2><p>JavaScript中的继承主要使用原型链实现<br>1.原型继承<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> SuperType = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.property = <span class="literal">true</span></span><br><span class="line">&#125;</span><br><span class="line">SuperType.prototype.getSuperValue = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">this</span>.property</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> SubType = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.property = <span class="literal">false</span></span><br><span class="line">&#125;</span><br><span class="line">SubType.prototype = <span class="keyword">new</span> SuperType()</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance = <span class="keyword">new</span> SubType()</span><br><span class="line"></span><br><span class="line">instance.getSuperValue()</span><br><span class="line"><span class="comment">// false</span></span><br><span class="line">instance <span class="keyword">instanceof</span> <span class="built_in">Object</span></span><br><span class="line"><span class="comment">// true</span></span><br><span class="line">instance <span class="keyword">instanceof</span> SuperType</span><br><span class="line"><span class="comment">// true</span></span><br><span class="line">instance <span class="keyword">instanceof</span> SuberType</span><br><span class="line"><span class="comment">// true</span></span><br></pre></td></tr></table></figure></p>
-<p>优点：实现了继承<br>缺点：实例之间的属性共享问题<br>2.借用构造函数<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name</span><br><span class="line">	<span class="keyword">this</span>.friends = [<span class="string">'tom'</span>, <span class="string">'petter'</span>, <span class="string">'li'</span>]</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> Parent = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">	Person.call(<span class="keyword">this</span>, name)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> instance0 = <span class="keyword">new</span> Parent(<span class="string">'tony'</span>)</span><br><span class="line"><span class="keyword">var</span> instance1 = <span class="keyword">new</span> Parent(<span class="string">'bruce'</span>)</span><br><span class="line"></span><br><span class="line">instance0.friends</span><br><span class="line"><span class="comment">// ['tom', 'petter', 'li']</span></span><br><span class="line">instance1.friends</span><br><span class="line"><span class="comment">// ['tom', 'petter', 'li']</span></span><br><span class="line"></span><br><span class="line">instance0.friends.push(<span class="string">'bob'</span>)</span><br><span class="line">instance1.friends.push(<span class="string">'bill'</span>)</span><br><span class="line"></span><br><span class="line">instance0.friends</span><br><span class="line"><span class="comment">// ['tom', 'petter', 'li', 'bob']</span></span><br><span class="line">instance1.friends</span><br><span class="line"><span class="comment">// ['tom', 'petter', 'li', 'bill']</span></span><br></pre></td></tr></table></figure></p>
-<p>优点：实例之间的属性可以独立<br>缺点：实例之间的方法无法复用</p>
-<p>3.组合继承<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> Person = <span class="function"><span class="keyword">function</span> (<span class="params">name</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">this</span>.name = name</span><br><span class="line">	<span class="keyword">this</span>.friends = [<span class="string">'tom'</span>, <span class="string">'petter'</span>, <span class="string">'li'</span>]</span><br><span class="line">&#125;</span><br><span class="line">Person.prototype.sayName = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> Parent = <span class="function"><span class="keyword">function</span> (<span class="params">name, age</span>) </span>&#123;</span><br><span class="line">	Person.call(<span class="keyword">this</span>, name)</span><br><span class="line">	<span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Parent.prototype = <span class="keyword">new</span> Person()</span><br><span class="line">Parent.prototype.constructor = Person</span><br><span class="line">Parent.prototype.sayAge = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">	<span class="built_in">console</span>.log(<span class="keyword">this</span>.age)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>优点：不同的实例拥有各自的属性和相同的方法<br>缺点：调用两次构造函数</p>
-<p>4.原型式继承<br>这是一种借助已有对象来进行继承的方式<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">object</span> (<span class="params">o</span>) </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">function</span> <span class="title">F</span> (<span class="params"></span>) </span>&#123;&#125;</span><br><span class="line">	F.prototype = o</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">new</span> F()</span><br><span class="line">&#125;</span><br><span class="line"> <span class="keyword">var</span> person = &#123;</span><br><span class="line">        name: <span class="string">"Nicholas"</span>,</span><br><span class="line">        friends: [<span class="string">"Shelby"</span>, <span class="string">"Court"</span>, <span class="string">"Van"</span>]</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">var</span> anotherPerson = object(person)</span><br><span class="line"><span class="keyword">var</span> yetAnotherPerson = object(person)</span><br><span class="line"></span><br><span class="line">anotherPerson.name = <span class="string">"Greg"</span></span><br><span class="line">anotherPerson.friends.push(<span class="string">"Rob"</span>)</span><br><span class="line">yetAnotherPerson.name = <span class="string">"Linda"</span></span><br><span class="line">yetAnotherPerson.friends.push(<span class="string">"Barbie"</span>)</span><br><span class="line">person.friends   </span><br><span class="line"><span class="comment">// Shelby,Court,Van,Rob,Barbie</span></span><br></pre></td></tr></table></figure></p>
-<p>ECMAScript 5 新增 Object.create() 规范化原型式继承<br>优点：使用方便<br>缺点：使用属性的值会共享</p>
-<p>5.寄生式继承<br>寄生式继承和寄生构造函数一样，都是在函数的内部对实例进行增强<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> createAnother = <span class="function"><span class="keyword">function</span> (<span class="params">original</span>) </span>&#123;</span><br><span class="line">	<span class="keyword">var</span> clone = <span class="built_in">Object</span>.create(original)</span><br><span class="line">	clone.sayHello = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">		<span class="built_in">console</span>.log(<span class="string">'hello'</span>)</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> clone</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">var</span> person = &#123;</span><br><span class="line">    name: <span class="string">"Nicholas"</span>,</span><br><span class="line">    friends: [<span class="string">"Shelby"</span>, <span class="string">"Court"</span>, <span class="string">"Van"</span>]</span><br><span class="line">&#125;; </span><br><span class="line"><span class="keyword">var</span> anotherPerson = createAnother(person)</span><br><span class="line">anotherPerson.sayHello()</span><br><span class="line"><span class="comment">// hello</span></span><br></pre></td></tr></table></figure></p>
-<p>6.寄生组合继承<br>组合继承存在调用两次父类的构造函数问题这会时父类的原型上创建出多余的属性 解决的方案是 我们只需要父类原型一个拷贝 没有必要调用父类的构造方法<br><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">inheritPrototype</span>(<span class="params">subType, superType</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">var</span> prototype = object(superType.prototype)</span><br><span class="line">    prototype.constructor = subType</span><br><span class="line">    subType.prototype = prototype</span><br><span class="line">&#125; </span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SuperType</span>(<span class="params">name</span>)</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>.name = name</span><br><span class="line">    <span class="keyword">this</span>.colors = [<span class="string">"red"</span>, <span class="string">"blue"</span>, <span class="string">"green"</span>]</span><br><span class="line">&#125; </span><br><span class="line">SuperType.prototype.sayName = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    alert(<span class="keyword">this</span>.name)</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">SubType</span>(<span class="params">name, age</span>)</span>&#123;</span><br><span class="line">    SuperType.call(<span class="keyword">this</span>, name)</span><br><span class="line">    <span class="keyword">this</span>.age = age</span><br><span class="line">&#125;</span><br><span class="line">inheritPrototype(SubType, SuperType)</span><br><span class="line">SubType.prototype.sayAge = <span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="keyword">this</span>.age)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
-<p>优点： 完美了</p>
-<h2 id="以上"><a href="#以上" class="headerlink" title="以上"></a>以上</h2>
           
         
       
@@ -1722,7 +1740,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-count">13</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
